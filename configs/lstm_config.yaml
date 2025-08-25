@@ -1,0 +1,197 @@
+# LSTM Model Training Configuration
+# Configuration for training the predictive maintenance LSTM model
+
+# Model Architecture
+model:
+  input_size: 20  # Number of sensor features
+  hidden_size: 128
+  num_layers: 3
+  sequence_length: 168  # 7 days * 24 hours
+  output_size: 4  # Multi-horizon: 1h, 4h, 24h, 7d
+  dropout: 0.2
+  attention_heads: 8
+  bidirectional: false
+  use_attention: true
+
+# Training Parameters
+training:
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.0005
+  epochs: 100
+  patience: 15  # Early stopping patience
+  gradient_clip: 1.0
+  
+  # Loss function weights for different horizons
+  horizon_weights: [1.0, 0.8, 0.6, 0.4]  # 1h, 4h, 24h, 7d
+  
+  # Focal loss parameters
+  focal_loss:
+    alpha: 1.0
+    gamma: 2.0
+
+# Data Processing
+data:
+  sequence_length: 168
+  prediction_horizons: [1, 4, 24, 168]  # hours
+  feature_columns:
+    - vibration_x
+    - vibration_y
+    - vibration_z
+    - temperature
+    - pressure
+    - current
+    - voltage
+    - flow_rate
+    - suction_pressure
+    - discharge_pressure
+    - rpm
+    - power_factor
+  
+  # Data splitting
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  
+  # Data augmentation
+  augmentation:
+    noise_std: 0.01
+    time_shift_max: 2  # hours
+    scaling_factor: 0.05
+
+# Feature Engineering
+features:
+  scaler_type: "robust"  # "standard" or "robust"
+  
+  # Rolling window features
+  rolling_windows: [6, 12, 24]  # hours
+  
+  # Statistical features
+  statistical_features:
+    - mean
+    - std
+    - min
+    - max
+    - skewness
+    - kurtosis
+
+# Monitoring and Logging
+monitoring:
+  # Drift detection
+  drift_detection:
+    reference_window_days: 30
+    detection_window_days: 7
+    drift_threshold: 0.15
+    statistical_test_alpha: 0.05
+    min_sample_size: 100
+  
+  # Performance targets
+  performance_targets:
+    min_auc: 0.85
+    max_latency_ms: 200
+    min_precision: 0.80
+    min_recall: 0.85
+
+# MLflow Configuration
+mlflow:
+  experiment_name: "predictive_maintenance"
+  tracking_uri: "http://localhost:5000"
+  model_registry_uri: "models:/predictive_maintenance_lstm/Production"
+  
+  # Logging parameters
+  log_artifacts: true
+  log_metrics: true
+  log_params: true
+
+# Hardware Configuration
+hardware:
+  device: "auto"  # "cpu", "cuda", or "auto"
+  num_workers: 4
+  pin_memory: true
+  
+  # GPU memory optimization
+  gpu_memory_fraction: 0.8
+  mixed_precision: true
+
+# Validation and Testing
+validation:
+  # Cross-validation
+  cv_folds: 5
+  cv_strategy: "time_series_split"
+  
+  # Model evaluation
+  evaluation_metrics:
+    - roc_auc
+    - precision
+    - recall
+    - f1_score
+    - accuracy
+  
+  # Threshold optimization
+  threshold_optimization:
+    method: "precision_recall_curve"
+    target_metric: "f1_score"
+
+# Deployment Configuration
+deployment:
+  # Model serving
+  serving:
+    host: "0.0.0.0"
+    port: 8000
+    workers: 4
+    max_request_size: "10MB"
+    
+  # Caching
+  caching:
+    enabled: true
+    ttl_seconds: 300  # 5 minutes
+    max_cache_size: 1000
+    
+  # Rate limiting
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 1000
+    burst_size: 100
+
+# Alerting and Notifications
+alerting:
+  # Performance alerts
+  performance_alerts:
+    enabled: true
+    latency_threshold_ms: 500
+    error_rate_threshold: 0.05
+    accuracy_threshold: 0.80
+    
+  # Drift alerts
+  drift_alerts:
+    enabled: true
+    drift_threshold: 0.20
+    alert_window_hours: 24
+    
+  # Notification channels
+  notifications:
+    email:
+      enabled: false
+      recipients: []
+    slack:
+      enabled: false
+      webhook_url: ""
+    webhook:
+      enabled: false
+      url: ""
+
+# Backup and Recovery
+backup:
+  # Model backup
+  model_backup:
+    enabled: true
+    backup_interval_hours: 24
+    max_backups: 10
+    backup_location: "models/backups/"
+    
+  # Data backup
+  data_backup:
+    enabled: true
+    backup_interval_hours: 6
+    max_backups: 50
+    backup_location: "data/backups/"

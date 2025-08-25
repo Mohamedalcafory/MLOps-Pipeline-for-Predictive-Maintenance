@@ -1,0 +1,131 @@
+# Database Configuration
+DATABASE_URL=postgresql://mlops_user:mlops_pass@localhost:5432/mlops_db
+POSTGRES_DB=mlops_db
+POSTGRES_USER=mlops_user
+POSTGRES_PASSWORD=mlops_pass
+
+# Redis Configuration
+REDIS_URL=redis://localhost:6379/0
+
+# MLflow Configuration
+MLFLOW_TRACKING_URI=http://localhost:5000
+MLFLOW_BACKEND_STORE_URI=postgresql://mlops_user:mlops_pass@localhost:5432/mlops_db
+MLFLOW_DEFAULT_ARTIFACT_ROOT=s3://mlflow-artifacts
+MLFLOW_S3_ENDPOINT_URL=http://localhost:9000
+
+# MinIO Configuration (for artifact storage)
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+AWS_ACCESS_KEY_ID=minioadmin
+AWS_SECRET_ACCESS_KEY=minioadmin
+
+# Model Configuration
+MODEL_REGISTRY_URI=models:/predictive_maintenance_lstm/Production
+MODEL_VERSION=latest
+MODEL_BACKEND=pytorch
+
+# API Configuration
+API_HOST=0.0.0.0
+API_PORT=8000
+API_WORKERS=4
+API_TIMEOUT=60
+MAX_REQUEST_SIZE=10485760  # 10MB
+
+# Training Configuration
+TRAIN_BATCH_SIZE=32
+LEARNING_RATE=0.001
+MAX_EPOCHS=100
+EARLY_STOPPING_PATIENCE=10
+SEQUENCE_LENGTH=168  # 7 days in hours
+
+# Model Architecture
+HIDDEN_SIZE=128
+NUM_LAYERS=3
+DROPOUT=0.2
+ATTENTION_HEADS=8
+
+# Data Configuration
+DATA_PATH=data/processed
+TRAIN_SPLIT=0.7
+VAL_SPLIT=0.15
+TEST_SPLIT=0.15
+SEQUENCE_OVERLAP=0.5
+
+# Monitoring Configuration
+PROMETHEUS_ENABLED=true
+GRAFANA_ADMIN_PASSWORD=admin
+LOG_LEVEL=INFO
+METRICS_PORT=9090
+
+# Drift Detection
+DRIFT_DETECTION_ENABLED=true
+DRIFT_THRESHOLD=0.1
+DRIFT_CHECK_INTERVAL=3600  # seconds
+
+# Performance Targets
+INFERENCE_LATENCY_TARGET_MS=200
+THROUGHPUT_TARGET_RPS=100
+UPTIME_TARGET=0.999
+
+# Alerting Configuration
+SLACK_WEBHOOK_URL=
+ALERT_EMAIL=
+ALERT_THRESHOLDS_LATENCY_MS=500
+ALERT_THRESHOLDS_ERROR_RATE=0.05
+
+# Retraining Configuration
+AUTO_RETRAIN_ENABLED=true
+RETRAIN_DRIFT_THRESHOLD=0.15
+RETRAIN_PERFORMANCE_THRESHOLD=0.8
+RETRAIN_SCHEDULE=daily
+
+# Security Configuration
+API_KEY_REQUIRED=false
+API_KEY_HEADER=X-API-Key
+CORS_ORIGINS=*
+RATE_LIMIT_REQUESTS_PER_MINUTE=1000
+
+# Environment
+ENVIRONMENT=development
+DEBUG=true
+LOG_FORMAT=json
+
+# Feature Engineering
+FEATURE_WINDOW_SIZE=24  # hours
+FEATURE_STEP_SIZE=1     # hours
+STATISTICAL_FEATURES_ENABLED=true
+FREQUENCY_FEATURES_ENABLED=true
+DERIVED_FEATURES_ENABLED=true
+
+# Equipment Configuration
+SUPPORTED_EQUIPMENT_TYPES=pump,motor,compressor,turbine
+DEFAULT_SAMPLING_RATE=60  # minutes
+
+# Batch Processing
+BATCH_PREDICTION_MAX_SIZE=1000
+BATCH_PROCESSING_TIMEOUT=300  # seconds
+
+# Storage Configuration
+MODEL_STORAGE_PATH=models/
+DATA_STORAGE_PATH=data/
+ARTIFACT_STORAGE_PATH=artifacts/
+LOG_STORAGE_PATH=logs/
+
+# Kubernetes Configuration (for production deployment)
+K8S_NAMESPACE=mlops
+K8S_REPLICAS=3
+K8S_CPU_REQUEST=500m
+K8S_CPU_LIMIT=1000m
+K8S_MEMORY_REQUEST=512Mi
+K8S_MEMORY_LIMIT=1Gi
+
+# Auto-scaling Configuration
+AUTOSCALE_MIN_REPLICAS=2
+AUTOSCALE_MAX_REPLICAS=10
+AUTOSCALE_TARGET_CPU=70
+AUTOSCALE_TARGET_MEMORY=80
+
+# Backup Configuration
+BACKUP_ENABLED=true
+BACKUP_SCHEDULE="0 2 * * *"  # Daily at 2 AM
+BACKUP_RETENTION_DAYS=30
